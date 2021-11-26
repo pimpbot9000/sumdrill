@@ -46,6 +46,7 @@ function App() {
         </Row>
         <Candidates numbers={numbers} onClick={onClickHandler} />
         <Streak results={results} />
+        <hr/>
         <Scores results={results} />
       </Container>
 
