@@ -20,7 +20,7 @@
 .Number {
   margin-top: 10px;
   border-width: 2px;
-  font-size: calc(40px + 2vmin);
+  font-size: calc(30px + 2vmin);
   justify-content: center;
   align-items: center;
   text-align: center;
