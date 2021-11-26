@@ -30,7 +30,9 @@ function App() {
   }
 
   const onClickHandler = (res) => {
-    if (res === numbers.reduce((acc, elem) => acc + elem, 0)) {
+
+    const isCorrectAnswer = res === numbers.reduce((acc, elem) => acc + elem, 0)
+    if (isCorrectAnswer) {
       setResults([...results, 1])
     } else {
       setResults([...results, -1])
