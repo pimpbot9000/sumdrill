@@ -6,14 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useEffect, useState } from 'react'
 
-function getRndInteger(min, max) {
-  let result = 0
-  do {
-    result = Math.floor(Math.random() * (max - min + 1)) + min;    
-  } while (result === 0)
 
-  return result
-}
 
 function App() {
   const [numbers, setNumbers] = useState([1, 1])
@@ -31,7 +24,7 @@ function App() {
 
   const onClickHandler = (res) => {
 
-    const isCorrectAnswer = res === numbers.reduce((acc, elem) => acc + elem, 0)
+    const isCorrectAnswer = res === sumArr(numbers)
     if (isCorrectAnswer) {
       setResults([...results, 1])
     } else {
@@ -52,7 +45,7 @@ function App() {
           </Col>
         </Row>
         <Candidates numbers={numbers} onClick={onClickHandler} />
-
+        <Streak results={results} />
         <Scores results={results} />
       </Container>
 
@@ -82,16 +75,28 @@ const generateCandidates = (result) => {
 }
 
 const Candidates = ({ numbers, onClick }) => {
-  const candidates = generateCandidates(numbers[0] + numbers[1])
-  const col = candidates.map(c => <Col key="c"><div onClick={() => onClick(c)} className="Number"> {createNiceNumber(c)} </div></Col>)
-  return <Row>{col}</Row>
+  const candidates = generateCandidates(sumArr(numbers))
+    .map(c => <Col key="c"><div onClick={() => onClick(c)} className="Number"> {createNiceNumber(c, true)} </div></Col>)
 
+  const col1 = candidates.slice(0, 2)
+  const col2 = candidates.slice(-2)
+  return <><Row>{col1}</Row><Row>{col2}</Row></>
+
+}
+const Streak = ({ results }) => {
+  let length = results.length - 1
+  let streak = 0
+  while (length >= 0 && results[length] === 1) {
+    streak += 1
+    length -= 1
+  }
+  return <div className="Streak">Win Streak: {streak}</div>
 }
 
 const Expression = ({ numbers }) => {
 
-  const niceNumbers = numbers.map(n => createNiceNumber(n))
-  
+  const niceNumbers = numbers.map(n => createNiceNumber(n, false))
+
   if (numbers[1] < 0) {
 
     return (<div>
@@ -106,11 +111,23 @@ const Expression = ({ numbers }) => {
   }
 }
 
+const getRndInteger = (min, max) => {
+  let result = 0
+  do {
+    result = Math.floor(Math.random() * (max - min + 1)) + min;
+  } while (result === 0)
+
+  return result
+}
 
 
-const createNiceNumber = (number) => {
+const createNiceNumber = (number, padding) => {
+  let pad = ""
+  if (padding) {
+    pad = "⠀"  // U+2800 aka empty character!!
+  }
   if (number < 0) {
-    return "−" + Math.abs(number)
+    return "−" + Math.abs(number) + pad
   }
   return number
 }
@@ -127,6 +144,8 @@ const shuffleArray = (array) => {
     array[j] = temp;
   }
 }
+
+const sumArr = arr => arr.reduce((acc, elem) => acc + elem, 0)
 
 export default App;
 
