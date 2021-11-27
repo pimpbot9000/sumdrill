@@ -87,14 +87,14 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
   })
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setTimeout(() => {
       if (time <= 0) {
         setTime(100)
         onTimeout()
       } else {
         setTime(time - 1)
       }
-    }, 100);
+    }, 1000);
 
     return () => clearInterval(interval)
   }, [time])
