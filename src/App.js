@@ -2,33 +2,38 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { useEffect, useState } from 'react'
-
+import { getRndInteger, shuffleArray, formatToNiceNumber } from './utils/utils.js'
+import { useEffect } from 'react'
+import { generateNumbers } from './reducers/numbersReducer'
+import { wrongAnswer, rightAnswer } from './reducers/resultsReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 function App() {
-  const [numbers, setNumbers] = useState([1, 1])
-  const [results, setResults] = useState([])
+
+  const numbers = useSelector((store) => store.numbers)
+  const results = useSelector((store) => store.results)
+
+  const dispatch = useDispatch()
+
+  const createNewNumbers = () => {
+    dispatch(generateNumbers(-5, 5))
+  }
 
   useEffect(() => {
     createNewNumbers()
-  }, [])
-
-
-
-  const createNewNumbers = () => {
-    setNumbers([getRndInteger(-5, 10), getRndInteger(-5, 5)])
-  }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onClickHandler = (res) => {
 
     const isCorrectAnswer = res === sumArr(numbers)
+    console.log(numbers)
+    console.log(res)
+    console.log(isCorrectAnswer)
     if (isCorrectAnswer) {
-      setResults([...results, 1])
+      dispatch(rightAnswer())
     } else {
-      setResults([...results, -1])
+      dispatch(wrongAnswer())
     }
     createNewNumbers()
   }
@@ -40,14 +45,14 @@ function App() {
         <Row>
           <Col>
             <div className="Blackboard">
-              <Expression numbers={numbers} />
+              <Expression />
             </div>
           </Col>
         </Row>
-        <Candidates numbers={numbers} onClick={onClickHandler} />
+        <Candidates onSelected={onClickHandler} />
         <Streak results={results} />
-        <hr/>
-        <Scores results={results} />
+        <hr />
+        <Scores />
       </Container>
 
     </div>
@@ -56,35 +61,38 @@ function App() {
   );
 }
 
-const Scores = ({ results }) => {
-  const scores = results.map(r => { if (r === 1) { return (<>😃</>) } else { return (<>😢</>) } })
-
+const Scores = () => {
+  const results = useSelector(store => store.results)
+  const scores = results.map((r, idx) => { if (r === 1) { return (<span key={idx}>😃</span>) } else { return (<span idx={idx}>😢</span>) } })
   return <div className="Emoji">{scores}</div>
 }
 
-const generateCandidates = (result) => {
+const Candidates = ({ onSelected }) => {
 
-  const candidates = new Set()
-  candidates.add(result)
-  do {
-    candidates.add(getRndInteger(-5, 5))
-  } while (candidates.size < 4)
+  const generateCandidates = (result) => {
+    const candidates = new Set()
+    candidates.add(result)
+    do {
+      candidates.add(getRndInteger(-5, 5))
+    } while (candidates.size < 4)
 
-  const candidatesArray = [...candidates]
-  shuffleArray(candidatesArray)
-  return candidatesArray
-}
+    const candidatesArray = [...candidates]
+    shuffleArray(candidatesArray)
+    return candidatesArray
+  }
 
-const Candidates = ({ numbers, onClick }) => {
+
+  const numbers = useSelector(store => store.numbers)
   const candidates = generateCandidates(sumArr(numbers))
-    .map(c => <Col key="c"><div onClick={() => onClick(c)} className="Number"> {createNiceNumber(c, true)} </div></Col>)
+    .map(c => <Col key={c}><div onClick={() => onSelected(c)} className="Number"> {formatToNiceNumber(c, true)} </div></Col>)
 
   const col1 = candidates.slice(0, 2)
   const col2 = candidates.slice(-2)
   return <><Row>{col1}</Row><Row>{col2}</Row></>
-
 }
-const Streak = ({ results }) => {
+
+const Streak = () => {
+  const results = useSelector(store => store.results)
   let length = results.length - 1
   let streak = 0
   while (length >= 0 && results[length] === 1) {
@@ -94,9 +102,9 @@ const Streak = ({ results }) => {
   return <div className="Streak">Win Streak: {streak}</div>
 }
 
-const Expression = ({ numbers }) => {
-
-  const niceNumbers = numbers.map(n => createNiceNumber(n, false))
+const Expression = () => {
+  const numbers = useSelector(store => store.numbers)
+  const niceNumbers = numbers.map(n => formatToNiceNumber(n, false))
 
   if (numbers[1] < 0) {
 
@@ -109,40 +117,6 @@ const Expression = ({ numbers }) => {
     return (<div>
       {niceNumbers[0]} + {niceNumbers[1]}
     </div>)
-  }
-}
-
-const getRndInteger = (min, max) => {
-  let result = 0
-  do {
-    result = Math.floor(Math.random() * (max - min + 1)) + min;
-  } while (result === 0)
-
-  return result
-}
-
-
-const createNiceNumber = (number, padding) => {
-  let pad = ""
-  if (padding) {
-    pad = "⠀"  // U+2800 aka empty character!!
-  }
-  if (number < 0) {
-    return "−" + Math.abs(number) + pad
-  }
-  return number
-}
-
-/**
- * 
- * Copy pasted from Stack overflow. Shuffles an array in place. 
- */
-const shuffleArray = (array) => {
-  for (var i = array.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
   }
 }
 
