@@ -94,7 +94,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
       } else {
         setTime(time - 1)
       }
-    }, 20);
+    }, 100);
 
     return () => clearInterval(interval)
   }, [time])
