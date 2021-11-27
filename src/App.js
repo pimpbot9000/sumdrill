@@ -96,7 +96,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
     if (!pause){
     const timeOut = setTimeout(() => {
       if (time <= 0) {
-        setTime(100)
+        resetTime()
         onTimeout()        
       } else {
         setTime(time - 1)
