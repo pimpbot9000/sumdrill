@@ -4,7 +4,7 @@ const resultsReducer = (state = [], action) => {
     case 'CORRECT':
       return [...state, 1]
     case 'INCORRECT':
-      return [...state, -1]
+      return []
     default:
       return state
   }

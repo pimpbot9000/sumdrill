@@ -99,7 +99,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
     return () => clearInterval(interval)
   }, [time])
   
-  return <ProgressBar now={time} />
+  return <ProgressBar now={time}  label={`${time}%`} />
 })
 
 const Scores = () => {
