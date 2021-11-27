@@ -44,6 +44,7 @@ function App() {
 
   const onTimeout = () => {
     dispatch(wrongAnswer())
+    createNewNumbers()
   }
 
 
@@ -93,7 +94,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
       } else {
         setTime(time - 1)
       }
-    }, 30);
+    }, 20);
 
     return () => clearInterval(interval)
   }, [time])
