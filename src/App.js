@@ -75,15 +75,9 @@ function App() {
 
 const Countdown = React.forwardRef(({ onTimeout }, ref) => {
   const [time, setTime] = useState(100)
-  const [pause, setPause] = useState(false)
-
+  
   const resetTime = () => {
     setTime(100)
-    setPause(true)
-    setTimeout(() =>{
-       setPause(false)
-       setTime(99)
-    }, 500)
   }
 
   useImperativeHandle(ref, () => {
@@ -92,18 +86,16 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
     }
   })
   
-  useEffect(() => {
-    if (!pause){
+  useEffect(() => {    
     const timeOut = setTimeout(() => {
       if (time <= 0) {
-        resetTime()
+        setTime(100)
         onTimeout()        
       } else {
         setTime(time - 1)
       }
     }, 100);
-    return () => clearTimeout(timeOut)
-    }
+    return () => clearTimeout(timeOut)    
   }, [time])
   
   return <ProgressBar now={time}  label={`${time}%`} />
