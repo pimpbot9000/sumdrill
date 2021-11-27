@@ -1,9 +1,10 @@
-import Container from 'react-bootstrap/Container';
+import Container from 'react-bootstrap/Container'
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import './App.css';
 import { getRndInteger, shuffleArray, formatToNiceNumber } from './utils/utils.js'
-import { useEffect } from 'react'
+import React, { useState, useEffect, useImperativeHandle } from 'react'
 import { generateNumbers } from './reducers/numbersReducer'
 import { wrongAnswer, rightAnswer } from './reducers/resultsReducer'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,13 +12,16 @@ import { useDispatch, useSelector } from 'react-redux'
 
 function App() {
 
+
   const numbers = useSelector((store) => store.numbers)
   const results = useSelector((store) => store.results)
+  const postFormRef = React.createRef()
 
   const dispatch = useDispatch()
 
   const createNewNumbers = () => {
     dispatch(generateNumbers(-5, 5))
+
   }
 
   useEffect(() => {
@@ -27,16 +31,21 @@ function App() {
   const onClickHandler = (res) => {
 
     const isCorrectAnswer = res === sumArr(numbers)
-    console.log(numbers)
-    console.log(res)
-    console.log(isCorrectAnswer)
+    postFormRef.current.resetTime()
+
     if (isCorrectAnswer) {
       dispatch(rightAnswer())
     } else {
       dispatch(wrongAnswer())
     }
     createNewNumbers()
+
   }
+
+  const onTimeout = () => {
+    dispatch(wrongAnswer())
+  }
+
 
   return (<>
 
@@ -51,8 +60,10 @@ function App() {
         </Row>
         <Candidates onSelected={onClickHandler} />
         <Streak results={results} />
+        <Countdown ref={postFormRef} onTimeout={() => onTimeout()} />
         <hr />
         <Scores />
+
       </Container>
 
     </div>
@@ -61,9 +72,38 @@ function App() {
   );
 }
 
+const Countdown = React.forwardRef(({ onTimeout }, ref) => {
+  const [time, setTime] = useState(100)
+
+  const resetTime = () => {
+    setTime(100)
+  }
+
+  useImperativeHandle(ref, () => {
+    return {
+      resetTime
+    }
+  })
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (time < 0) {
+        setTime(100)
+        onTimeout()
+      } else {
+        setTime(time - 1)
+      }
+    }, 30);
+
+    return () => clearInterval(interval)
+  }, [time])
+  
+  return <ProgressBar now={time} />
+})
+
 const Scores = () => {
   const results = useSelector(store => store.results)
-  const scores = results.map((r, idx) => { if (r === 1) { return (<span key={idx}>😃</span>) } else { return (<span idx={idx}>😢</span>) } })
+  const scores = results.map((r, idx) => { if (r === 1) { return (<span key={idx}>😃</span>) } else { return (<span key={idx}>😢</span>) } })
   return <div className="Emoji">{scores}</div>
 }
 
@@ -107,20 +147,22 @@ const Expression = () => {
   const niceNumbers = numbers.map(n => formatToNiceNumber(n, false))
 
   if (numbers[1] < 0) {
-
+    const str = `${niceNumbers[0]} + (${niceNumbers[1]}) =`
     return (<div>
-      {niceNumbers[0]} + ({niceNumbers[1]})
+      {str}
     </div>)
   }
 
   else {
+    const str = `${niceNumbers[0]} + ${niceNumbers[1]} =`
     return (<div>
-      {niceNumbers[0]} + {niceNumbers[1]}
+      {str}
     </div>)
   }
 }
 
 const sumArr = arr => arr.reduce((acc, elem) => acc + elem, 0)
+
 
 export default App;
 
