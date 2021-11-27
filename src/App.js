@@ -15,7 +15,7 @@ function App() {
 
   const numbers = useSelector((store) => store.numbers)
   const results = useSelector((store) => store.results)
-  const postFormRef = React.createRef()
+  const timerFormRef = React.createRef()
 
   const dispatch = useDispatch()
 
@@ -31,7 +31,7 @@ function App() {
   const onClickHandler = (res) => {
 
     const isCorrectAnswer = res === sumArr(numbers)
-    postFormRef.current.resetTime()
+    timerFormRef.current.resetTime()
 
     if (isCorrectAnswer) {
       dispatch(rightAnswer())
@@ -61,7 +61,7 @@ function App() {
         </Row>
         <Candidates onSelected={onClickHandler} />
         <Streak results={results} />
-        <Countdown ref={postFormRef} onTimeout={() => onTimeout()} />
+        <Countdown ref={timerFormRef} onTimeout={() => onTimeout()} />
         <hr />
         <Scores />
 
@@ -75,9 +75,15 @@ function App() {
 
 const Countdown = React.forwardRef(({ onTimeout }, ref) => {
   const [time, setTime] = useState(100)
+  const [pause, setPause] = useState(false)
 
   const resetTime = () => {
     setTime(100)
+    setPause(true)
+    setTimeout(() =>{
+       setPause(false)
+       setTime(99)
+    }, 500)
   }
 
   useImperativeHandle(ref, () => {
@@ -85,8 +91,9 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
       resetTime
     }
   })
-
+  
   useEffect(() => {
+    if (!pause){
     const timeOut = setTimeout(() => {
       if (time <= 0) {
         setTime(100)
@@ -96,6 +103,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
       }
     }, 100);
     return () => clearTimeout(timeOut)
+    }
   }, [time])
   
   return <ProgressBar now={time}  label={`${time}%`} />
