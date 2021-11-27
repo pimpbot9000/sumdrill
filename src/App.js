@@ -88,7 +88,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (time < 0) {
+      if (time <= 0) {
         setTime(100)
         onTimeout()
       } else {
