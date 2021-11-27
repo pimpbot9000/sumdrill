@@ -96,7 +96,7 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
       }
     }, 100);
 
-    return () => clearTimeout(interval)
+    //return () => clearTimeout(interval)
   }, [time])
   
   return <ProgressBar now={time}  label={`${time}%`} />
