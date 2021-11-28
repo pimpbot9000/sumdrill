@@ -3,25 +3,24 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import './App.css';
-import { getRndInteger, shuffleArray, formatToNiceNumber } from './utils/utils.js'
+
+import { formatToNiceNumber, choose } from './utils/utils.js'
 import React, { useState, useEffect, useImperativeHandle } from 'react'
-import { generateNumbers } from './reducers/numbersReducer'
+import { generateNumbers } from './reducers/taskReducer'
 import { wrongAnswer, rightAnswer } from './reducers/resultsReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 
 function App() {
 
-
-  const numbers = useSelector((store) => store.numbers)
+  const task = useSelector((store) => store.task)
   const results = useSelector((store) => store.results)
   const timerFormRef = React.createRef()
 
   const dispatch = useDispatch()
 
   const createNewNumbers = () => {
-    dispatch(generateNumbers(-5, 5))
-
+    dispatch(generateNumbers(-5, 5, choose(["SUM", "MULTIPLICATION"])))
   }
 
   useEffect(() => {
@@ -30,7 +29,7 @@ function App() {
 
   const onClickHandler = (res) => {
 
-    const isCorrectAnswer = res === sumArr(numbers)
+    const isCorrectAnswer = res === task.answer
     timerFormRef.current.resetTime()
 
     if (isCorrectAnswer) {
@@ -47,9 +46,7 @@ function App() {
     createNewNumbers()
   }
 
-
-  return (<>
-
+  return (
     <div className="Container">
       <Container>
         <Row>
@@ -64,18 +61,14 @@ function App() {
         <Countdown ref={timerFormRef} onTimeout={() => onTimeout()} />
         <hr />
         <Scores />
-
       </Container>
 
-    </div>
-  </>
-
-  );
+    </div>)
 }
 
 const Countdown = React.forwardRef(({ onTimeout }, ref) => {
   const [time, setTime] = useState(100)
-  
+
   const resetTime = () => {
     setTime(100)
   }
@@ -85,20 +78,21 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
       resetTime
     }
   })
-  
-  useEffect(() => {    
+
+  useEffect(() => {
+
     const timeOut = setTimeout(() => {
       if (time <= 0) {
-        setTime(100)        
-        onTimeout()        
-      } else {        
+        setTime(100)
+        onTimeout()
+      } else {
         setTime(time - 1)
       }
     }, 100);
-    return () => clearTimeout(timeOut)    
+    return () => clearTimeout(timeOut)
   })
-  
-  return <ProgressBar now={time}  label={`${time}%`} />
+
+  return <ProgressBar now={time} label={`${time}%`} />
 })
 
 const Scores = () => {
@@ -109,28 +103,16 @@ const Scores = () => {
 
 const Candidates = ({ onSelected }) => {
 
-  const generateCandidates = (result) => {
-    const candidates = new Set()
-    candidates.add(result)
-    do {
-      candidates.add(getRndInteger(-5, 5))
-    } while (candidates.size < 4)
-
-    const candidatesArray = [...candidates]
-    shuffleArray(candidatesArray)
-    return candidatesArray
-  }
-
-
-  const numbers = useSelector(store => store.numbers)
-  const candidates = generateCandidates(sumArr(numbers))
+  const candidates = useSelector(store => store.task.candidates)
+  const formattedCandidates = candidates
     .map(c => <Col key={c}><div onClick={() => onSelected(c)} className="Number"> {formatToNiceNumber(c, true)} </div></Col>)
 
-  const col1 = candidates.slice(0, 2)
-  const col2 = candidates.slice(-2)
+  const col1 = formattedCandidates.slice(0, 2)
+  const col2 = formattedCandidates.slice(-2)
   return <><Row>{col1}</Row><Row>{col2}</Row></>
 }
 
+// Some redundancy here since I changed the implementation to show only streaks
 const Streak = () => {
   const results = useSelector(store => store.results)
   let length = results.length - 1
@@ -143,26 +125,24 @@ const Streak = () => {
 }
 
 const Expression = () => {
-  const numbers = useSelector(store => store.numbers)
-  const niceNumbers = numbers.map(n => formatToNiceNumber(n, false))
+  const task = useSelector(store => store.task)
+  const operator = task.operation === "SUM" ? "+" : "·"
+  const niceNumbers = task.numbers.map(n => formatToNiceNumber(n, false))
 
-  if (numbers[1] < 0) {
-    const str = `${niceNumbers[0]} + (${niceNumbers[1]}) =`
+  if (task.numbers[1] < 0) {
+    const str = `${niceNumbers[0]} ${operator} (${niceNumbers[1]}) =`
     return (<div>
       {str}
     </div>)
   }
 
   else {
-    const str = `${niceNumbers[0]} + ${niceNumbers[1]} =`
+    const str = `${niceNumbers[0]} ${operator} ${niceNumbers[1]} =`
     return (<div>
       {str}
     </div>)
   }
 }
-
-const sumArr = arr => arr.reduce((acc, elem) => acc + elem, 0)
-
 
 export default App;
 

@@ -7,7 +7,6 @@ export const getRndInteger = (min, max) => {
   return result
 }
 
-
 /**  
  * Copy-pasted from Stack overflow. Shuffles an array in place. 
  */
@@ -23,10 +22,18 @@ export const shuffleArray = (array) => {
 export const formatToNiceNumber = (number, padding) => {
   let pad = ""
   if (padding) {
-    pad = "⠀"  // U+2800 aka empty character!!
+    pad = "⠀"  // U+2800 = empty character!!
   }
   if (number < 0) {
     return "−" + Math.abs(number) + pad
   }
   return number
+}
+
+/**  
+ * Copy-pasted from Stack overflow :)
+ */
+export const choose = (choices) => {
+  var index = Math.floor(Math.random() * choices.length);
+  return choices[index];
 }
