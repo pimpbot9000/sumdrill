@@ -24,7 +24,7 @@ const generateCandidatesMultiplication = (result) => {
   candidates.add(-result)
 
   do {
-    candidates.add(getRndInteger(-5, 5))
+    candidates.add(getRndInteger(-20, 21))
   } while (candidates.size < 4)
 
   const candidatesArray = [...candidates]
