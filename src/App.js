@@ -89,14 +89,14 @@ const Countdown = React.forwardRef(({ onTimeout }, ref) => {
   useEffect(() => {    
     const timeOut = setTimeout(() => {
       if (time <= 0) {
-        setTime(100)
+        setTime(100)        
         onTimeout()        
-      } else {
+      } else {        
         setTime(time - 1)
       }
     }, 100);
     return () => clearTimeout(timeOut)    
-  }, [time])
+  })
   
   return <ProgressBar now={time}  label={`${time}%`} />
 })
