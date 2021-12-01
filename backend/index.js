@@ -10,7 +10,7 @@ db.migrate.latest()
 
 const PORT = process.env.PORT || 8080
 app.use(express.static('build'))
-//app.use(cors())
+app.use(cors())
 app.use(express.json())
 app.use('/api/v1/', router)
 
