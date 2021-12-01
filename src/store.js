@@ -1,13 +1,17 @@
 import taskReducer from './reducers/taskReducer'
 import resultsReducer from './reducers/resultsReducer'
-import { createStore, combineReducers } from 'redux'
-
+import scoresReducer from './reducers/scoresReducer'
+import playerReducer from './reducers/playerReducer'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 
 const reducer = combineReducers({
   task: taskReducer,
-  results: resultsReducer
+  results: resultsReducer,
+  scores: scoresReducer,
+  player: playerReducer
 })
 
-const store = createStore(reducer)
+const store = createStore(reducer, applyMiddleware(thunk))
 
 export default store

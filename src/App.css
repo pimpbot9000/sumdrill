@@ -11,11 +11,11 @@
   
   margin-bottom: 10px;
 }
+
 .Container {
   margin: 0 auto;
   max-width: 600px;
 }
-
 
 .Number {
   margin-top: 10px;
@@ -36,4 +36,9 @@
 .Streak {
   font-size: calc(15px + 2vmin);
   text-align: right;
+}
+
+.HighScores {
+  background-color: beige;
+  padding: 10px
 }

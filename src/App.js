@@ -4,18 +4,23 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import './App.css';
 import Countdown from './components/Countdown.tsx'
+import PlayerName from './components/PlayerName';
 import { formatToNiceNumber, choose } from './utils/utils.js'
 import React, { useEffect } from 'react'
 import { generateNumbers } from './reducers/taskReducer'
 import { wrongAnswer, rightAnswer } from './reducers/resultsReducer'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { initializeScores, newScore } from './reducers/scoresReducer'
+import { setName } from './reducers/playerReducer';
 
 function App() {
 
   const task = useSelector((store) => store.task)
   const results = useSelector((store) => store.results)
-  const timerFormRef = React.createRef()
+  const scores = useSelector(store => store.scores)
+  const player = useSelector(store => store.player)
+
+  const timerForwRef = React.createRef()
 
   const dispatch = useDispatch()
 
@@ -27,26 +32,50 @@ function App() {
     createNewNumbers()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    dispatch(initializeScores())
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const onClickHandler = (res) => {
 
     const isCorrectAnswer = res === task.answer
-    timerFormRef.current.resetTime()
+    timerForwRef.current.resetTime()
 
     if (isCorrectAnswer) {
       dispatch(rightAnswer())
     } else {
+      setNewScore(player, results.length)
       dispatch(wrongAnswer())
+
     }
     createNewNumbers()
 
   }
 
+  const setNewScore = (player, currentScore) => {
+    if (currentScore === 0){
+      return
+    }
+
+    if (currentScore >= scores.lowestScore || scores.topScores.length < 10) {      
+      dispatch(newScore(player, currentScore))
+    }
+  }
+
   const onTimeout = () => {
+    setNewScore(player, results.length)
     dispatch(wrongAnswer())
     createNewNumbers()
   }
 
-  return (
+  const onStartGame = (name) => {
+    dispatch(setName(name))
+    timerForwRef.current.startGame()
+  }
+
+  return (<>
+    <PlayerName onStartGame={onStartGame} />
+
     <div className="Container">
       <Container>
         <Row>
@@ -58,29 +87,38 @@ function App() {
         </Row>
         <Candidates onSelected={onClickHandler} />
         <Streak results={results} />
-        <Countdown ref={timerFormRef} onTimeout={() => onTimeout()} />
-        <hr />
-        <Scores />
+        <Countdown ref={timerForwRef} onTimeout={() => onTimeout()} />
+        <hr />        
+        <Row><Col><Scores/></Col><Col><HighScores/></Col></Row>
       </Container>
 
-    </div>)
+    </div></>)
 }
-
-
 
 const Scores = () => {
   const multiplier = 10
   const results = useSelector(store => store.results)
-  const n =  results.length
+  const n = results.length
   const nofMultipliers = Math.floor(n / multiplier) * multiplier
-  const residual = n < 5 ? n : (n % multiplier)  
+  const residual = n < 5 ? n : (n % multiplier)
 
   const scores = results.slice(0, residual).map((r, idx) => { if (r === 1) { return (<span key={idx}>😃</span>) } else { return (<span key={idx}>😢</span>) } })
-  return(
+  return (
     <div className="Emoji">
       {nofMultipliers > 0 ? <div>{nofMultipliers}x😃</div> : <></>}
       <div>{scores}</div>
     </div>)
+}
+
+const HighScores = () => {
+  
+  const scores = useSelector((store) => store.scores)
+  if (Object.keys(scores).length === 0){
+    return <div>Loading...</div>
+  }
+  
+  const scoreList = scores.topScores.map((s, idx) => <div key={idx}>{idx+1}. {s.name}: {s.score}</div>)
+  return <div className="HighScores"><div ><b>HIGHSCORES</b><hr/></div><div>{scoreList}</div></div>
 }
 
 const Candidates = ({ onSelected }) => {
