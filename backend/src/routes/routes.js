@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { response } = require('express')
 const express = require('express')
 const { createScore, getScores } = require('../controllers/score')
