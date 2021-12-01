@@ -1,4 +1,4 @@
-const baseUrl = "v1/api"//process.env.REACT_APP_API_URL
+const baseUrl = "/api/v1"//process.env.REACT_APP_API_URL
 const axios = require('axios')
 //const camelcaseKeys = require('camelcase-keys')
 //const snakecaseKeys = require('snakecase-keys')
