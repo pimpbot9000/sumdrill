@@ -7,9 +7,11 @@ type Props = {
 
 const Countdown = React.forwardRef(({ onTimeout }: Props, ref) => {
     const [time, setTime] = useState(100)
+    const [pause, setPause] = useState(false)
   
     const resetTime = () => {
       setTime(100)
+      pauseTimer()
     }
   
     React.useImperativeHandle(ref, () => {
@@ -17,15 +19,26 @@ const Countdown = React.forwardRef(({ onTimeout }: Props, ref) => {
         resetTime
       }
     })
-  
+
+    const pauseTimer = () => {
+      setPause(true)
+      setTimeout(() => {
+        setPause(false)
+      }
+      , 1000)
+    }
+    
+    
+
     useEffect(() => {
   
       const timeOut = setTimeout(() => {
         if (time <= 0) {
           setTime(100)
           onTimeout()
+          pauseTimer()
         } else {
-          setTime(time - 1)
+          if (!pause) setTime(time - 1)
         }
       }, 100);
       return () => clearTimeout(timeOut)
