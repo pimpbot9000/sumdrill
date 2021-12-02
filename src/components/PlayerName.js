@@ -24,7 +24,7 @@ const PlayerName = ({ onStartGame }) => {
                         type="text"
                         className="form-control"
                         maxlength="10"
-                        minlength="8"
+                        minlength="3"
 
                     />
                 </div>
