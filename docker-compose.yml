@@ -17,14 +17,12 @@ services:
   
   frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile.development
     volumes:
-      - ./:/usr/src/app
+      - ./frontend:/usr/src/app
     ports:
-      - 3000:3000
-    environment:
-      - REACT_APP_API_URL=http://localhost:8080      
+      - 3000:3000      
 
   postgres:
     image: postgres:latest
