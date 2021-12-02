@@ -134,6 +134,8 @@ const Candidates = ({ onSelected }) => {
 
 // Some redundancy here since I changed the implementation to show only streaks
 const Streak = () => {
+
+  const player = useSelector(store => store.player)
   const results = useSelector(store => store.results)
   let length = results.length - 1
   let streak = 0
@@ -141,7 +143,9 @@ const Streak = () => {
     streak += 1
     length -= 1
   }
-  return <div className="Streak">Win Streak: {streak}</div>
+
+  return <Row><Col><div className="PlayerName">{player}</div></Col><Col><div className="Streak">Win Streak: {streak}</div></Col></Row>
+
 }
 
 const Expression = () => {
