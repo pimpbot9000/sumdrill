@@ -38,6 +38,12 @@
   text-align: right;
 }
 
+.PlayerName {
+  font-size: calc(15px + 2vmin);
+  text-align: left;
+}
+
+
 .HighScores {
   background-color: beige;
   padding: 10px
