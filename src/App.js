@@ -53,11 +53,11 @@ function App() {
   }
 
   const setNewScore = (player, currentScore) => {
-    if (currentScore === 0){
+    if (currentScore === 0) {
       return
     }
 
-    if (currentScore >= scores.lowestScore || scores.topScores.length < 10) {      
+    if (currentScore >= scores.lowestScore || scores.topScores.length < 10) {
       dispatch(newScore(player, currentScore))
     }
   }
@@ -88,8 +88,8 @@ function App() {
         <Candidates onSelected={onClickHandler} />
         <Streak results={results} />
         <Countdown ref={timerForwRef} onTimeout={() => onTimeout()} />
-        <hr />        
-        <Row><Col><Scores/></Col><Col><HighScores/></Col></Row>
+        <hr />
+        <Row><Col><Scores /></Col><Col><HighScores /></Col></Row>
       </Container>
 
     </div></>)
@@ -111,14 +111,14 @@ const Scores = () => {
 }
 
 const HighScores = () => {
-  
+
   const scores = useSelector((store) => store.scores)
-  if (Object.keys(scores).length === 0){
+  if (Object.keys(scores).length === 0) {
     return <div>Loading...</div>
   }
-  
-  const scoreList = scores.topScores.map((s, idx) => <div key={idx}>{idx+1}. {s.name}: {s.score}</div>)
-  return <div className="HighScores"><div ><b>HIGHSCORES</b><hr/></div><div>{scoreList}</div></div>
+
+  const scoreList = scores.topScores.map((s, idx) => <div key={idx}>{idx + 1}. {s.name}: {s.score}</div>)
+  return <div className="HighScores"><div><b>HIGHSCORES</b><hr /></div><div>{scoreList}</div></div>
 }
 
 const Candidates = ({ onSelected }) => {
@@ -134,18 +134,15 @@ const Candidates = ({ onSelected }) => {
 
 // Some redundancy here since I changed the implementation to show only streaks
 const Streak = () => {
-
-  const player = useSelector(store => store.player)
   const results = useSelector(store => store.results)
+  const player = useSelector(store => store.player)
   let length = results.length - 1
   let streak = 0
   while (length >= 0 && results[length] === 1) {
     streak += 1
     length -= 1
   }
-
   return <Row><Col><div className="PlayerName">{player}</div></Col><Col><div className="Streak">Win Streak: {streak}</div></Col></Row>
-
 }
 
 const Expression = () => {
