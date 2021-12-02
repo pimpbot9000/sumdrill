@@ -12,5 +12,4 @@ RUN npm install
 RUN npm run build
 # add app
 
-# start app lauching a server that serves the frontend
 CMD ["npm", "run", "start"]
