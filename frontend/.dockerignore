@@ -1,9 +1,0 @@
-
-/node_modules
-/build
-/backend
-
-.git
-*.md
-.gitignore
-Dockerfile.*
