@@ -32,6 +32,9 @@
     "eject": "react-scripts eject",
     "start": "node server/express-server.js"
   },
+
+  "proxy": "http://backend:8080",
+
   "eslintConfig": {
     "extends": [
       "react-app",

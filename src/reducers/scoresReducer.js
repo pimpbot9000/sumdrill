@@ -1,6 +1,6 @@
 import scoresService from "../services/scores"
 
-const scoresReducer = (state = {}, action) => {
+const scoresReducer = (state = {topScores: [], lowestScore: 0}, action) => {
     switch (action.type) {
         case 'NEW_SCORE':
             const topScores = [...state.topScores, action.data]
