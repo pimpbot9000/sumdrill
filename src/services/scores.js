@@ -5,8 +5,6 @@ const axios = require('axios')
 //const snakecaseKeys = require('snakecase-keys')
 const scoresUrl = `${baseUrl}/scores`
 
-console.log(baseUrl)
-
 const getAll = async () => {
     const response = await axios.get(scoresUrl)
         
