@@ -11,12 +11,8 @@ db.migrate.latest()
 
 const PORT = process.env.PORT || 8080
 
-if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "docker_compose") {
-    app.use(cors())
-} else {
-    console.log("CORS disabled on production")
-}
 
+app.use(cors())
 app.use(express.static('../build'))
 app.use(express.json())
 app.use('/api/v1/', router)
