@@ -30,6 +30,7 @@
 }
 
 .Emoji {
+  min-height: calc(40px + 2vmin);
   font-size: calc(20px + 2vmin);
 }
 

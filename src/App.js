@@ -89,7 +89,8 @@ function App() {
         <Streak results={results} />
         <Countdown ref={timerForwRef} onTimeout={() => onTimeout()} />
         <hr />
-        <Row><Col><Scores /></Col><Col><HighScores /></Col></Row>
+        <Scores />
+        <HighScores/>
       </Container>
 
     </div></>)
