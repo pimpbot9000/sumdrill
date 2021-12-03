@@ -1,10 +1,7 @@
-
 const db = require('../db/db')
 
 
 const createScore = async (req, res) => {
-
-    
 
     const [dbResult] = await db('score').insert({
         ...req.body
@@ -20,7 +17,7 @@ const getScores = async (req, res) => {
 }
 
 const deleteScores = async (req, res) => {
-    db('score').del()
+    await db('score').del()
     return res.status(200).json({ message: "Scoreboard erased" })
 }
 module.exports = { createScore, getScores, deleteScores }

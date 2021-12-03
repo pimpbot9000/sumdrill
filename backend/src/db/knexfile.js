@@ -1,13 +1,13 @@
 
-module.exports = {  
+module.exports = {
 
   development: {
-    client: 'pg', //or postgresql
+    client: 'pg',
     connection: {
       port: 5432,
-      host: '127.0.0.1',  //postgres
+      host: '127.0.0.1',
       database: 'knex',
-      user:     'knex',
+      user: 'knex',
       password: 'password'
     },
     pool: {
@@ -24,9 +24,9 @@ module.exports = {
     client: 'pg',
     connection: {
       port: 5432,
-      host: 'postgres', 
+      host: 'postgres',
       database: 'knex',
-      user:     'knex',
+      user: 'knex',
       password: 'password'
     },
     pool: {
@@ -38,7 +38,7 @@ module.exports = {
       directory: 'src/db/migrations'
     }
   },
-  
+
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL,

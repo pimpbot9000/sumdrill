@@ -1,9 +1,8 @@
 require('dotenv').config()
-const { response } = require('express')
 const express = require('express')
-const { createScore, getScores, deleteScores } = require('../controllers/score')
-const cors = require('cors')
+
 const router = express.Router()
+const { createScore, getScores, deleteScores } = require('../controllers/score')
 
 
 router.get('/health', (req, res) => {
