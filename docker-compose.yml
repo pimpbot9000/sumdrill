@@ -8,6 +8,7 @@ services:
     environment:
       - NODE_ENV=docker_compose
       - PORT=8080
+      - API_KEY=swordfish
     ports: 
       - 8080:8080
     volumes:
