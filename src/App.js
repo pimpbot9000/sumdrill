@@ -118,7 +118,7 @@ const HighScores = () => {
     return <div>Loading...</div>
   }
 
-  const scoreList = scores.topScores.map((s, idx) => <div key={idx}>{idx + 1}. {s.name}: {s.score}</div>)
+  const scoreList = scores.topScores.map((s, idx) => <div key={idx}>{idx + 1}. {s.name}:  <b>{s.score}</b></div>)
   return <div className="HighScores"><div><b>HIGHSCORES</b><hr /></div><div>{scoreList}</div></div>
 }
 

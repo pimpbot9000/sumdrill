@@ -30,7 +30,7 @@
 }
 
 .Emoji {
-  min-height: calc(40px + 2vmin);
+  min-height: calc(80px + 4vmin);
   font-size: calc(20px + 2vmin);
 }
 
@@ -46,5 +46,6 @@
 
 .HighScores {
   background-color: beige;
-  padding: 10px
+  padding: 10px;
+  font-size: calc(15px + 2vmin);
 }
