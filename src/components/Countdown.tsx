@@ -23,7 +23,6 @@ const Countdown = React.forwardRef(({ onTimeout }: Props, ref) => {
   })
 
   const startGame =() => {
-
     setPause(false)
   }
 
