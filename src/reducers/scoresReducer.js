@@ -7,7 +7,7 @@ const scoresReducer = (state = {topScores: [], lowestScore: 0}, action) => {
             topScores.sort((a, b) => b.score - a.score)
             const lowestScore = topScores[topScores.length - 1].score
             const res = {
-                topScores: topScores.slice(0,10),
+                topScores: topScores.slice(0,30),
                 lowestScore
             }
             return res
@@ -22,7 +22,7 @@ export const initializeScores = () => {
     return async dispatch => {
         const scores = await scoresService.getAll()
         scores.sort((a, b) => b.score - a.score)
-        const topScores = scores.slice(0, 10)
+        const topScores = scores.slice(0, 30)
 
         const lowestScore = scores.length === 0? 0 : scores[topScores.length - 1].score
 
