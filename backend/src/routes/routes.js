@@ -22,6 +22,6 @@ router.get('/health', (req, res) => {
 
 router.post('/scores', cors(corsOptions), createScore)
 router.get('/scores', getScores)
-router.delete('/score', deleteScores)
+router.delete('/score', cors(), deleteScores)
 
 module.exports = router
