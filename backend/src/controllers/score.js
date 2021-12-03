@@ -25,4 +25,8 @@ const getScores = async (req, res) => {
     return res.status(200).json(queryResult)
 }
 
+const deleteScores =  async (req, res) => {
+    db('accounts').del()
+    return res.status(200).json({message: "Scoreboard erased"})
+}
 module.exports = { createScore, getScores }

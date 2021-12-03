@@ -5,6 +5,7 @@ const axios = require('axios')
 axios.defaults.headers.common = {
     "X-API-Key": process.env.REACT_APP_API_KEY,
 };
+
 const scoresUrl = `${baseUrl}/scores`
 
 const getAll = async () => {
