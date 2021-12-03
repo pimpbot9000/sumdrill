@@ -5,7 +5,8 @@ const { createScore, getScores } = require('../controllers/score')
 const cors = require('cors')
 const router = express.Router()
 const corsOptions = {
-    origin: "https://sumdrill.herokuapp.com"
+    origin: 'https://sumdrill.herokuapp.com',
+    methods: ['POST']
 }
 
 router.get('/health', (req, res) => {
