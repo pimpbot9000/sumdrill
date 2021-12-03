@@ -4,11 +4,18 @@ const express = require('express')
 const { createScore, getScores } = require('../controllers/score')
 const cors = require('cors')
 const router = express.Router()
-const corsOptions = {
-    origin: 'https://sumdrill.herokuapp.com',
-    methods: ['POST']
-}
 
+const whitelist = ['https://sumdrill.herokuapp.com', 'http://sumdrill.herokuapp.com']
+
+var corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed"))
+    }
+ }
+}
 router.get('/health', (req, res) => {
     return res.status(200).send('I\'m healthy')
 })
