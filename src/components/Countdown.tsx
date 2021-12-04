@@ -14,16 +14,23 @@ const Countdown = React.forwardRef(({ onTimeout }: Props, ref) => {
     pauseTimer()
   }
 
+  const pauseGame = () => {
+    setPause(true)
+  }
+
+
   React.useImperativeHandle(ref, () => {
     return {
       resetTime,
-      startGame
+      startGame,
+      pauseGame
+
     }
 
   })
 
   const startGame =() => {
-    setPause(false)
+    resetTime()
   }
 
   const pauseTimer = () => {

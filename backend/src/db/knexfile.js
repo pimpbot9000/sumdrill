@@ -1,7 +1,7 @@
 
 module.exports = {
 
-  development: {
+  development: { 
     client: 'pg',
     connection: {
       port: 5432,

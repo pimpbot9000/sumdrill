@@ -4,7 +4,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import './App.css';
 import Countdown from './components/Countdown.tsx'
-import PlayerName from './components/PlayerName';
+import PlayerName from './components/PlayerName'
+import Failure from './components/Failure';
 import { formatToNiceNumber, choose } from './utils/utils.js'
 import React, { useEffect } from 'react'
 import { generateNumbers } from './reducers/taskReducer'
@@ -21,6 +22,7 @@ function App() {
   const player = useSelector(store => store.player)
 
   const timerForwRef = React.createRef()
+  const failureForwRef = React.createRef()
 
   const dispatch = useDispatch()
 
@@ -39,19 +41,43 @@ function App() {
   const onClickHandler = (res) => {
 
     const isCorrectAnswer = res === task.answer
-    timerForwRef.current.resetTime()
 
     if (isCorrectAnswer) {
-      dispatch(rightAnswer())
+      onSuccess()
     } else {
-      setNewScore(player, results.length)
-      dispatch(wrongAnswer())
-
+      onFailure()
     }
-    createNewNumbers()
 
   }
 
+  const onFailure = () => {
+    setNewScore(player, results.length)
+    failureForwRef.current.showPopUp()
+    timerForwRef.current.pauseGame()
+  }
+
+  const onSuccess = () => {
+    dispatch(rightAnswer())
+    timerForwRef.current.resetTime()
+    createNewNumbers()
+  }
+
+  const onTimeout = () => {
+    onFailure()
+  }
+
+  const onStartGame = (name) => {
+    dispatch(setName(name))
+    timerForwRef.current.startGame()
+  }
+
+  const onResumeGame = () => {
+    dispatch(wrongAnswer())
+    createNewNumbers()
+    timerForwRef.current.resetTime()
+  }
+
+  // This logic should probably be handled by score reducer
   const setNewScore = (player, currentScore) => {
     if (currentScore === 0) {
       return
@@ -62,20 +88,10 @@ function App() {
     }
   }
 
-  const onTimeout = () => {
-    setNewScore(player, results.length)
-    dispatch(wrongAnswer())
-    createNewNumbers()
-  }
-
-  const onStartGame = (name) => {
-    dispatch(setName(name))
-    timerForwRef.current.startGame()
-  }
 
   return (<>
     <PlayerName onStartGame={onStartGame} />
-
+    <Failure ref={failureForwRef} onResumeGame={onResumeGame} task={task} />
     <div className="Container">
       <Container>
         <Row>
@@ -90,7 +106,7 @@ function App() {
         <Countdown ref={timerForwRef} onTimeout={() => onTimeout()} />
         <hr />
         <Scores />
-        <HighScores/>
+        <HighScores />
       </Container>
 
     </div></>)
