@@ -33,8 +33,8 @@ Todo. There are no tests, nor linting :::(
 
 Just send a delete request to endpoint ```/api/v1/scores```.
 
-### Weird stuff / bugs / features
+### Notes to self / Weird stuff / bugs / features / Other stuff
 * See key "proxy" key in package.json (frontend). It uses "postgres" instead of localhost (?).
 * Sometimes it seems that the high score list is not updated
 * If someone else is playing the game at the same time, the highscore lists are not in sync. Todo: learn web sockets.
-
+* Procfile is for heroku ```web: sh -c 'cd ./backend/ && node index.js'``` Heroku apparently recogocnizes node app, runs npm build. The procfile script starts the express server which serves the built React app.
